@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Literal
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
@@ -57,3 +58,83 @@ class SessionSummary(BaseModel):
     dominant_expression: Expression | None
     started_at: datetime
     updated_at: datetime
+
+
+class ErrorBody(BaseModel):
+    code: str
+    message: str
+
+
+class ErrorResponse(BaseModel):
+    error: ErrorBody
+
+
+class RegisterRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    email: str = Field(min_length=3, max_length=254)
+    password: str = Field(min_length=8, max_length=128)
+
+    @field_validator("email")
+    @classmethod
+    def normalize_email(cls, value: str) -> str:
+        value = value.strip().lower()
+        if "@" not in value or value.startswith("@") or value.endswith("@"):
+            raise ValueError("enter a valid email address")
+        return value
+
+
+class LoginRequest(RegisterRequest):
+    pass
+
+
+class PublicUser(BaseModel):
+    id: UUID
+    email: str
+    created_at: datetime
+
+
+class AuthResponse(BaseModel):
+    user: PublicUser
+    access_token: str
+    token_type: Literal["bearer"] = "bearer"
+
+
+class ConversationCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    title: str | None = Field(default=None, min_length=1, max_length=120)
+
+
+class Conversation(BaseModel):
+    id: UUID
+    title: str
+    created_at: datetime
+    updated_at: datetime
+
+
+class MessageCreate(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    content: str = Field(min_length=1, max_length=4000)
+
+    @field_validator("content")
+    @classmethod
+    def content_must_not_be_blank(cls, value: str) -> str:
+        value = value.strip()
+        if not value:
+            raise ValueError("message cannot be blank")
+        return value
+
+
+class Message(BaseModel):
+    id: UUID
+    conversation_id: UUID
+    role: Literal["user", "assistant"]
+    content: str
+    created_at: datetime
+
+
+class ChatResponse(BaseModel):
+    user_message: Message
+    assistant_message: Message
