@@ -101,7 +101,10 @@ async function sendMessage(event) {
     if (!conversationId) {
       const conversationResponse = await fetch(`${API_BASE_URL}/conversations`, {
         method: "POST",
-        headers: { "X-Anonymous-Session": sessionId },
+        headers: {
+          "Content-Type": "application/json",
+          "X-Anonymous-Session": sessionId,
+        },
         body: JSON.stringify({}),
       });
       if (!conversationResponse.ok) {

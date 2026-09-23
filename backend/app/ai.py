@@ -18,6 +18,14 @@ class AIKeyInvalid(RuntimeError):
     pass
 
 
+class AIQuotaExceeded(RuntimeError):
+    pass
+
+
+class AIModelUnavailable(RuntimeError):
+    pass
+
+
 class AIProvider:
     def validate_key(self, api_key: str) -> None:
         request = Request(
@@ -49,7 +57,15 @@ class AIProvider:
         try:
             with urlopen(request, timeout=settings.ai_timeout_seconds) as response:
                 data = json.loads(response.read())
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+        except HTTPError as exc:
+            if exc.code == 401 or exc.code == 403:
+                raise AIKeyInvalid from None
+            if exc.code == 404:
+                raise AIModelUnavailable from None
+            if exc.code == 429:
+                raise AIQuotaExceeded from None
+            raise AIUnavailable from None
+        except (URLError, TimeoutError, json.JSONDecodeError) as exc:
             raise AIUnavailable("AI provider request failed") from exc
         try:
             reply = data["choices"][0]["message"]["content"]

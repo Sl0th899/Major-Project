@@ -4,7 +4,7 @@ from uuid import UUID
 from fastapi import Depends, FastAPI, Header, HTTPException, Response, status
 from fastapi.middleware.cors import CORSMiddleware
 
-from .ai import AIKeyInvalid, AIProvider, AIUnavailable
+from .ai import AIKeyInvalid, AIModelUnavailable, AIProvider, AIQuotaExceeded, AIUnavailable
 from .chat_store import ChatStore, SessionNotFound
 from .config import settings
 from .models import (
@@ -99,6 +99,10 @@ def send_message(
         raise HTTPException(status_code=413, detail={"code": "SESSION_LIMIT", "message": "This anonymous session has reached its message limit."}) from None
     except AIKeyInvalid:
         raise HTTPException(status_code=401, detail={"code": "INVALID_API_KEY", "message": "The provider API key could not be used."}) from None
+    except AIQuotaExceeded:
+        raise HTTPException(status_code=429, detail={"code": "AI_QUOTA_EXCEEDED", "message": "The provider account has reached its usage limit."}) from None
+    except AIModelUnavailable:
+        raise HTTPException(status_code=502, detail={"code": "AI_MODEL_UNAVAILABLE", "message": "The configured AI model is unavailable for this provider account."}) from None
     except AIUnavailable:
         raise HTTPException(status_code=503, detail={"code": "AI_UNAVAILABLE", "message": "The AI provider is unavailable right now."}) from None
     if user_message is None or assistant_message is None:
