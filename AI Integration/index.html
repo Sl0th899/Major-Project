@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Cat Therapist</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <section id="key-screen" class="panel intro-panel">
+      <p class="eyebrow">Cat Therapist</p>
+      <h1>Insert your AI API Key</h1>
+      <p class="subtle">Your key is used in memory for this session and is never saved by this application.</p>
+      <form id="key-form" novalidate>
+        <label for="api-key">Provider API key</label>
+        <input id="api-key" name="api-key" type="password" autocomplete="off" spellcheck="false" required>
+        <button type="submit">Continue</button>
+        <p id="key-status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+
+    <section id="chat-screen" class="chat-panel hidden">
+      <header class="chat-header">
+        <div>
+          <p class="eyebrow">Cat Therapist</p>
+          <h1>A quiet place to talk</h1>
+        </div>
+        <button id="end-session" class="secondary-button" type="button">End session</button>
+      </header>
+      <div id="messages" class="messages" aria-live="polite"></div>
+      <form id="chat-form" class="composer">
+        <label class="sr-only" for="message">Message</label>
+        <textarea id="message" maxlength="4000" rows="3" placeholder="Tell me what is on your mind..." required></textarea>
+        <button type="submit">Send</button>
+        <p id="chat-status" class="status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

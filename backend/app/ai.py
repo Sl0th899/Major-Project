@@ -14,18 +14,36 @@ class AIUnavailable(RuntimeError):
     pass
 
 
+class AIKeyInvalid(RuntimeError):
+    pass
+
+
 class AIProvider:
-    def reply(self, history: Sequence[Message], content: str) -> str:
-        if not settings.ai_api_key:
-            raise AIUnavailable("AI provider is not configured")
+    def validate_key(self, api_key: str) -> None:
+        request = Request(
+            f"{settings.ai_base_url.rstrip('/')}/models",
+            headers={"Authorization": f"Bearer {api_key}"},
+            method="GET",
+        )
+        try:
+            with urlopen(request, timeout=settings.ai_timeout_seconds):
+                return
+        except HTTPError as exc:
+            if exc.code in (401, 403):
+                raise AIKeyInvalid from None
+            raise AIUnavailable from None
+        except (URLError, TimeoutError) as exc:
+            raise AIUnavailable from exc
+
+    def reply(self, api_key: str, history: Sequence[Message], content: str) -> str:
         messages = [{"role": "system", "content": SYSTEM_PROMPT}]
-        messages.extend({"role": item.role, "content": item.content} for item in history[-20:])
+        messages.extend({"role": item.role, "content": item.content} for item in history[-settings.max_history_messages:])
         messages.append({"role": "user", "content": content})
         payload = json.dumps({"model": settings.ai_model, "messages": messages, "temperature": 0.7, "max_tokens": 500}).encode()
         request = Request(
             f"{settings.ai_base_url.rstrip('/')}/chat/completions",
             data=payload,
-            headers={"Authorization": f"Bearer {settings.ai_api_key}", "Content-Type": "application/json"},
+            headers={"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"},
             method="POST",
         )
         try:

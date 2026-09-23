@@ -69,35 +69,13 @@ class ErrorResponse(BaseModel):
     error: ErrorBody
 
 
-class RegisterRequest(BaseModel):
-    model_config = ConfigDict(extra="forbid")
-
-    email: str = Field(min_length=3, max_length=254)
-    password: str = Field(min_length=8, max_length=128)
-
-    @field_validator("email")
-    @classmethod
-    def normalize_email(cls, value: str) -> str:
-        value = value.strip().lower()
-        if "@" not in value or value.startswith("@") or value.endswith("@"):
-            raise ValueError("enter a valid email address")
-        return value
+class AnonymousSession(BaseModel):
+    session_id: str
+    expires_at: datetime
 
 
-class LoginRequest(RegisterRequest):
-    pass
-
-
-class PublicUser(BaseModel):
-    id: UUID
-    email: str
-    created_at: datetime
-
-
-class AuthResponse(BaseModel):
-    user: PublicUser
-    access_token: str
-    token_type: Literal["bearer"] = "bearer"
+class KeyValidationResponse(BaseModel):
+    valid: bool = True
 
 
 class ConversationCreate(BaseModel):
