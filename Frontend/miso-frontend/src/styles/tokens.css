@@ -1,0 +1,58 @@
+/* "The windowsill": Miso's world. Warm paper, pencil ink, marmalade fur, garden sage. */
+:root {
+  /* Surfaces */
+  --paper: #f6eee3;        /* page background, oat paper */
+  --paper-deep: #ede1cf;   /* linen, tinted sections */
+  --card: #fffaf3;         /* raised surfaces */
+  --line: #e0d0ba;         /* hairlines */
+  --line-strong: #cdb89c;
+
+  /* Ink */
+  --ink: #33291f;          /* 12.9:1 on paper */
+  --ink-soft: #66574a;     /* 6.0:1 on paper */
+  --ink-faint: #85766a;    /* 4.1:1, large or decorative text only */
+
+  /* Accents */
+  --marmalade: #e0873a;    /* decorative: Miso's fur */
+  --marmalade-deep: #a24f18; /* buttons and links: 5.6:1 white-on, 5.0:1 on paper */
+  --marmalade-hover: #8a4212;
+  --marmalade-wash: #f9e2c8;
+  --sage: #93ab8c;
+  --sage-deep: #3f5c3a;    /* 6.8:1 on paper */
+  --sage-wash: #e3ebdb;    /* user message */
+  --blush: #f2bcb2;
+  --blush-wash: #fbe8e3;
+  --sky: #e8efe4;
+  --danger: #a3372b;
+  --danger-wash: #f8e0da;
+
+  /* Type */
+  --font: "Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Nunito", system-ui, sans-serif;
+  --fs-meta: 0.8125rem;    /* 13 */
+  --fs-small: 0.9375rem;   /* 15 */
+  --fs-body: 1rem;         /* 16 */
+  --fs-chat: 1.0625rem;    /* 17 */
+  --fs-h3: 1.25rem;        /* 20 */
+  --fs-h2: clamp(1.6rem, 1.2rem + 1.4vw, 2.1rem);
+  --fs-h1: clamp(2.2rem, 1.4rem + 3.2vw, 3.4rem);
+
+  /* Space (4px base) */
+  --s1: 4px; --s2: 8px; --s3: 12px; --s4: 16px; --s5: 24px; --s6: 32px; --s7: 48px; --s8: 72px; --s9: 112px;
+
+  /* Shape: small for controls, large for panels, pill only for chips and send */
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 28px;
+  --r-pill: 999px;
+
+  --shadow-1: 0 1px 0 rgb(51 41 31 / 0.05), 0 6px 18px -10px rgb(110 72 38 / 0.28);
+  --shadow-2: 0 2px 0 rgb(51 41 31 / 0.04), 0 22px 48px -24px rgb(110 72 38 / 0.45);
+
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --t-fast: 140ms;
+  --t-med: 260ms;
+
+  /* Colored-pencil hatch, echoing Miso's fills */
+  --hatch: repeating-linear-gradient(-32deg, rgb(224 135 58 / 0.10) 0 2px, transparent 2px 7px);
+  --hatch-sage: repeating-linear-gradient(28deg, rgb(147 171 140 / 0.22) 0 2px, transparent 2px 8px);
+}
