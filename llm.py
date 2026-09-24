@@ -24,7 +24,7 @@ def llm(query):
       stream=True,
       stop=None
   )
-
+  
   for chunk in completion:
       # print(chunk.choices[0].delta.content or "", end="")
       answer += chunk.choices[0].delta.content or ""
