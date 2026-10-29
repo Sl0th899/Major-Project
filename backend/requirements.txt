@@ -1,1 +1,4 @@
 groq
+ultralytics
+deepface
+opencv-python
